@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>服务汇总</title>
+</head>
+<style>
+    ul li {
+        padding: 10px;
+    }
+</style>
+
+<body>
+    <h3>景区小程序接入流程</h3>
+    <ul>
+        <li>账号准备:需要准备该景区的公众号和小程序各一个</li>
+        <li>
+            <a href="http://mp.weixin.qq.com" target="_blank">小程序注册</a>
+        </li>
+        <li>
+            <a href="http://tshttps.qqdayu.com/authTest/authUrl" target="_blank">登录和授权到景区第三方平台</a>
+        </li>
+        <li>
+            <form action="api/mini/wxamplink" method="get" target="_blank">
+                公众号appid
+                <input type="text" name="gappid" value="wx0f7ca8bfb9e0c8ec"> 小程序appid
+                <input type="text" name="mappid" value="wx3d0ed865a378ffeb">
+                <input type="submit" value="关联小程序(进入公众号管理后台，可以看到小程序授权接入)" />
+            </form>
+        </li>
+
+
+        <li>
+            <a href="api/mini/wxamplinkget" target="_blank">平台授权概况</a>
+        </li>
+
+        <hr>
+        <h4>小程序管理页面</h4>
+        <li>
+            <form action="api/wxa/getCategory" method="get" target="_blank">
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <input type="submit" value="获取授权小程序帐号的可选类目" />
+            </form>
+        </li>
+        <li>
+            <form action="api/wxa/getPage" method="get" target="_blank">
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <input type="submit" value="获取小程序的第三方提交代码的页面配置" />
+            </form>
+        </li>
+
+        <h4>开发管理</h4>
+        <li>
+            <form action="api/domain/modifyDomain" method="post" target="_blank">
+                小程序appid:
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <br/> action(当参数是get时不需要填四个域名字段):
+                <select name="action">
+                    <option value="add">add</option>
+                    <option value="delete">delete</option>
+                    <option value="set">set</option>
+                    <option value="get" selected="selected">get</option>
+                </select>
+                <br/> request 合法域名:
+                <input type="text" name="requestdomain" value="https://tshttps.qqdayu.com;https://www.qq.com">
+                <br/> socket 合法域名:
+                <input type="text" name="wsrequestdomain" value="wss://www.qq.com;wss://www.qq.com">
+                <br/> uploadFile 合法域名:
+                <input type="text" name="uploaddomain" value="https://www.qq.com;https://www.qq.com">
+                <br/> downloadFile 合法域名:
+                <input type="text" name="downloaddomain" value="https://www.qq.com;https://www.qq.com">
+                <br/>
+                <input type="submit" value="设置小程序服务器域名" />
+            </form>
+        </li>
+        <li>
+            <form action="api/domain/setwebviewdomain" method="post" target="_blank">
+                小程序appid:
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <br/> action(当参数是get时不需要填四个域名字段):
+                <select name="action">
+                    <option value="add" selected="selected">add</option>
+                    <option value="delete">delete</option>
+                    <option value="set">set</option>
+                    <option value="get">get</option>
+                </select>
+                <br/> webviewdomain 业务合法域名:
+                <input type="text" name="webviewdomain" value="https://www.qq.com;https://www.qq.com">
+                <input type="submit" value="设置小程序业务域名" />
+            </form>
+        </li>
+        <li>
+            <a href="api/template/gettemplatedraftlist" target="_blank">获取草稿箱内的所有临时代码草稿</a>
+        </li>
+        <li>
+            <form action="api/template/addtotemplate" method="post" target="_blank">
+                <input type="text" name="draft_id">
+                <input type="submit" value="将草稿箱的草稿选为小程序代码模版" />
+            </form>
+        </li>
+        <li>
+            <a href="api/template/gettemplatelist" target="_blank">获取代码模版库中的所有小程序代码模版</a>
+        </li>
+        <li>
+            <form action="api/wxa/commit" method="get" target="_blank">
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <input type="text" name="template_id" value="1">
+                <input type="submit" value="为授权的小程序帐号上传小程序代码" />
+            </form>
+        </li>
+        <li>
+            <form action="api/wxa/getQrcode" method="get" target="_blank">
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <input type="submit" value="获取体验小程序的体验二维码" />
+            </form>
+        </li>
+        <li>
+                <form action="api/wxa/submitAudit" method="post" target="_blank">
+                    <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                    <input type="submit" value="将第三方提交的代码包提交审核" />
+                </form>
+            </li>
+    </ul>
+
+    <h3>其他服务</h3>
+    <ul id="nav_li">
+        <li>
+            <a href="api/demo/test" target="_blank">demo</a>
+        </li>
+        <li>
+            <form action="http://tshttps.qqdayu.com/authTest/getToken" method="get" target="_blank">
+                <input type="text" name="appid">
+                <input type="submit" value="授权获取access_token" />
+            </form>
+        </li>
+        <li>
+            <form action="api/mini/wxampunlink" method="get" target="_blank">
+                <input type="text" name="appid" value="wx3d0ed865a378ffeb">
+                <input type="submit" value="解除已关联的小程序" />
+            </form>
+        </li>
+        <li>
+            <form action="api/template/deletetemplate" method="post" target="_blank">
+                <input type="text" name="template_id" value="0">
+                <input type="submit" value="删除指定小程序代码模版" />
+            </form>
+        </li>
+    </ul>
+</body>
+<script>
+
+</script>
+
+</html>
