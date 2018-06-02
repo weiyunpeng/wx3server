@@ -20,6 +20,7 @@ function run(Request, Response) {
       getQrcode: getQrcode,
       getCategory: getCategory,
       submitAudit: submitAudit,
+      getAuditstatus: getAuditstatus,
       getPage: getPage
     };
     funs[Request.params.name](Params, Request, Response);
@@ -125,34 +126,22 @@ async function submitAudit(Params, Request, Response) {
   let appid = Params.appid;
   let Token = await getAccessToken(appid);
   dLog.info('获取的 Token 为： %s ', Token);
-
-  let item_list = [
-    {
-      address: 'pages/index/main',
-      tag: '出行与交通',
-      first_class: '停车',
-      second_class: '停车',
-      first_id: 110,
-      second_id: 125,
-      third_id: 126,
-      title: '首页'
-    }
-  ];
-  let getPage = await rp.get(baseurl + '/wxa/get_page?access_token=' + Token);
-  const address = JSON.parse(getPage);
-  dLog.info('获取的 address 为： %s ', JSON.stringify(address));
-  dLog.info('获取的 page_list 为： %s ', address.page_list);
-
   const params = {
-    item_list: item_list,
-    address: address.page_list,
-    tag: '出行与交通',
-    first_class: '停车',
-    second_class: '停车',
-    first_id: 110,
-    second_id: 125,
-    third_id: 126
+    item_list: [
+      {
+        address: 'pages/index/main',
+        tag: '无感停车',
+        first_class: '出行与交通',
+        second_class: '停车',
+        third_class: '停车',
+        first_id: 110,
+        second_id: 125,
+        third_id: 126,
+        title: '首页'
+      }
+    ]
   };
+
   const apiUrl = baseurl + '/wxa/submit_audit?access_token=' + Token;
 
   request.post(
@@ -170,6 +159,42 @@ async function submitAudit(Params, Request, Response) {
       } catch (error) {
         logger.error('submitAudit error: %s ', error);
         Response.end('submitAudit error: ' + error);
+      }
+    }
+  );
+}
+
+/**
+ * 获取审核结果
+ * @param {Object} Request
+ * @param {Object} Response
+ */
+async function getAuditstatus(Params, Request, Response) {
+  let appid = Params.appid;
+  let auditid = Params.auditid;
+  let Token = await getAccessToken(appid);
+  dLog.info('获取的 Token 为： %s ', Token);
+  const params = {
+    auditid: auditid
+  };
+
+  const apiUrl = baseurl + '/wxa/get_auditstatus?access_token=' + Token;
+
+  request.post(
+    { url: apiUrl, body: JSON.stringify(params) },
+    (err, res, body) => {
+      if (err) {
+        logger.error(err);
+        return false;
+      }
+      try {
+        dLog.info('请求 getAuditstatus 的结果 %s', body);
+        Response.setHeader('Content-Type', 'application/json; charset=utf-8');
+        // const obj = JSON.parse(body);
+        Response.end(body);
+      } catch (error) {
+        logger.error('getAuditstatus error: %s ', error);
+        Response.end('getAuditstatus error: ' + error);
       }
     }
   );
